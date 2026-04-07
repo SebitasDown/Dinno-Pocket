@@ -1,6 +1,6 @@
 package com.dinno.pocket.application.service;
 
-import com.dinno.pocket.application.exception.NotFound;
+import com.dinno.pocket.application.exception.WalletNotFoundException;
 import com.dinno.pocket.domain.model.Transaction;
 import com.dinno.pocket.domain.port.in.RegisterTransactionUseCase;
 import com.dinno.pocket.domain.port.out.TransactionRepositoryPort;
@@ -34,17 +34,19 @@ public class RegisterTransactionService implements RegisterTransactionUseCase {
         // Si no existen se crean estos valores
         if (transaction.getId() == null){
             transaction.setId(UUID.randomUUID());
+            log.debug("Se generó un nuevo ID de transacción: {}", transaction.getId());
         }
         if (transaction.getCreateAt() == null){
             transaction.setCreateAt(LocalDateTime.now());
         }
         return walletRepositoryPort.findById(transaction.getWalletId())
-                .switchIfEmpty(Mono.error(new NotFound("Bulletera no encontrada")))
+                .switchIfEmpty(Mono.error(new WalletNotFoundException("Billetera no encontrada")))
                 .flatMap(wallet -> {
                     wallet.updateBalance(transaction.getAmount(), transaction.getType());
-                    log.info("Nuevo saldo calculado. {}", wallet.getBalance());
+                    log.info("Nuevo saldo calculado para la billetera {}: {}", wallet.getId(), wallet.getBalance());
 
                     return walletRepositoryPort.save(wallet)
+                            .doOnSuccess(w -> log.info("Billetera actualizada guardada en base de datos"))
 
                             .then(transactionRepositoryPort.save(transaction));
                 })
