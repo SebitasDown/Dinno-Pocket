@@ -27,11 +27,16 @@ public class Wallet {
     }
 
     // sumar o restar a balance
-    public void applyTransaction(BigDecimal amount, TransactionType type){
-        if (TransactionType.INCOME.equals(type)){
+    public void updateBalance(BigDecimal amount, TransactionType type) {
+
+        if (this.balance == null) this.balance = BigDecimal.ZERO;
+        if (this.totalIncome == null) this.totalIncome = BigDecimal.ZERO;
+        if (this.totalExpense == null) this.totalExpense = BigDecimal.ZERO;
+
+        if (TransactionType.INCOME.equals(type)) {
             this.balance = this.balance.add(amount);
             this.totalIncome = this.totalIncome.add(amount);
-        }else {
+        } else if (TransactionType.EXPENSE.equals(type)) {
             this.balance = this.balance.subtract(amount);
             this.totalExpense = this.totalExpense.add(amount);
         }
