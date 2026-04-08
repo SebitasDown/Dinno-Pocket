@@ -15,6 +15,6 @@ public interface TransactionRepositoryPort {
 
     Flux<Transaction> findRecentByWalletId(UUID walletId, int limit);
 
-    Mono<Map<ExpenseCategory, BigDecimal>> sumExpensesByCategory(UUID walletId, int mont, int year);
+    Mono<Map<ExpenseCategory, BigDecimal>> sumExpensesByCategory(UUID walletId, int month, int year);
 
 }

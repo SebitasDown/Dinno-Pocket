@@ -2,6 +2,7 @@ package com.dinno.pocket.application.service;
 
 import com.dinno.pocket.application.exception.WalletNotFoundException;
 import com.dinno.pocket.domain.model.Transaction;
+import com.dinno.pocket.domain.model.Wallet;
 import com.dinno.pocket.domain.port.in.RegisterTransactionUseCase;
 import com.dinno.pocket.domain.port.out.TransactionRepositoryPort;
 import com.dinno.pocket.domain.port.out.WalletRepositoryPort;
@@ -27,30 +28,45 @@ public class RegisterTransactionService implements RegisterTransactionUseCase {
 
     @Override
     @Transactional
-    public Mono<Transaction> register(Transaction transaction) {
-        log.info("Iniciando registro de transación para la billetera: {}", transaction.getWalletId());
+    public Mono<Transaction> register(Transaction transaction, UUID userId) {
+        log.info("Iniciando registro de transacción para el usuario: {}", userId);
 
-
-        // Si no existen se crean estos valores
-        if (transaction.getId() == null){
+        // Preparamos la transacción
+        if (transaction.getId() == null) {
             transaction.setId(UUID.randomUUID());
-            log.debug("Se generó un nuevo ID de transacción: {}", transaction.getId());
         }
-        if (transaction.getCreateAt() == null){
+        if (transaction.getCreateAt() == null) {
             transaction.setCreateAt(LocalDateTime.now());
         }
-        return walletRepositoryPort.findById(transaction.getWalletId())
-                .switchIfEmpty(Mono.error(new WalletNotFoundException("Billetera no encontrada")))
+
+        // Buscamos la billetera. Si no viene walletId, buscamos por userId
+        Mono<Wallet> walletMono;
+        if (transaction.getWalletId() == null) {
+            log.info("No se proporcionó walletId, resolviendo por userId: {}", userId);
+            walletMono = walletRepositoryPort.findByUserId(userId);
+        } else {
+            log.info("Se proporcionó walletId: {}. Buscando...", transaction.getWalletId());
+            walletMono = walletRepositoryPort.findById(transaction.getWalletId());
+        }
+
+        return walletMono
+                .switchIfEmpty(Mono.error(() -> {
+                    String msg = transaction.getWalletId() == null ? 
+                        "No se encontró billetera asociada al usuario " + userId :
+                        "No se encontró la billetera con ID " + transaction.getWalletId();
+                    return new WalletNotFoundException(msg);
+                }))
                 .flatMap(wallet -> {
+                    // Aseguramos que la transacción se asocie a la billetera correcta
+                    transaction.setWalletId(wallet.getId());
+                    
                     wallet.updateBalance(transaction.getAmount(), transaction.getType());
-                    log.info("Nuevo saldo calculado para la billetera {}: {}", wallet.getId(), wallet.getBalance());
+                    log.info("Actualizando billetera {}. Nuevo saldo: {}", wallet.getId(), wallet.getBalance());
 
                     return walletRepositoryPort.save(wallet)
-                            .doOnSuccess(w -> log.info("Billetera actualizada guardada en base de datos"))
-
                             .then(transactionRepositoryPort.save(transaction));
                 })
-                .doOnSuccess(t -> log.info("Transaccion registrada con exito: {}", t.getId()))
-                .doOnError(e -> log.error("Error registrando la transaccion: {}", e.getMessage()));
+                .doOnSuccess(t -> log.info("Transacción registrada con éxito ID: {}", t.getId()))
+                .doOnError(e -> log.error("Error al registrar transacción: {}", e.getMessage()));
     }
 }

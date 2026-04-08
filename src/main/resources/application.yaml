@@ -1,3 +1,33 @@
+server:
+  port: ${PORT:8081}
+
 spring:
+  webflux:
+    problem-details:
+      enabled: true
   application:
-    name: pocket
+    name: Dinno-Pocket
+  r2dbc:
+    url: ${SPRING_R2DBC_URL:r2dbc:postgresql://localhost:5432/dinno_pocket}
+    username: ${SPRING_R2DBC_USERNAME:avnadmin}
+    password: ${SPRING_R2DBC_PASSWORD:}
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/dinno_pocket}
+    username: ${SPRING_DATASOURCE_USERNAME:avnadmin}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+  flyway:
+    url: ${SPRING_FLYWAY_URL:jdbc:postgresql://localhost:5432/dinno_pocket}
+    user: ${SPRING_FLYWAY_USER:avnadmin}
+    password: ${SPRING_FLYWAY_PASSWORD:}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:https://dinno-eurekaserver-1.onrender.com/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${random.value}
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90

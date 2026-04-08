@@ -29,7 +29,7 @@ public class GetRecentTransactionService implements GetrecentTransactionsUseCase
     public Flux<Transaction> execute(UUID userId, int limit) {
         log.info("Cargando las {} transacciones mas recientes para el usuario: {}", limit, userId);
 
-      return walletRepositoryPort.findById(userId)
+      return walletRepositoryPort.findByUserId(userId)
               .switchIfEmpty(Mono.error(new WalletNotFoundException("No se encontró billetera asociada al consultar transacciones")))
               .flatMapMany(wallet -> {
                   log.info("Billetera encontrada con ID: {}. Obteniendo transacciones...", wallet.getId());

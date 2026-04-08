@@ -34,7 +34,7 @@ public class GetExpensesByCategoryService implements GetExpensesByCategoryUseCas
         int currentMonth = today.getMonthValue();
         int currentYear = today.getYear();
 
-        return walletRepositoryPort.findById(userId)
+        return walletRepositoryPort.findByUserId(userId)
                 .switchIfEmpty(Mono.error(new WalletNotFoundException("Billetera no encontrada")))
 
                 // se suman las categorias

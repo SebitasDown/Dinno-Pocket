@@ -31,15 +31,25 @@ public class GetMonthProjectionService implements GetMounthProjectionUseCase {
 
         LocalDate now = LocalDate.now();
 
-        return walletRepositoryPort.findById(userId)
+        return walletRepositoryPort.findByUserId(userId)
                 .switchIfEmpty(Mono.error(new WalletNotFoundException("Billetera no encontrada")))
                 .flatMap(wallet -> projectionRepositoryPort.findByWalletIdAndMonth(wallet.getId(), now)
                         .map(projection -> {
-
                             projection.setBalanceAtMoment(wallet.getBalance());
                             return projection;
-                                })
-
-                        );
+                        })
+                        .switchIfEmpty(Mono.defer(() -> {
+                            log.info("No se encontró proyección para el mes actual, creando una por defecto");
+                            Projection defaultProjection = new Projection();
+                            defaultProjection.setId(UUID.randomUUID());
+                            defaultProjection.setWalletId(wallet.getId());
+                            defaultProjection.setBalanceAtMoment(wallet.getBalance());
+                            defaultProjection.setRemainingFixedExpenses(java.math.BigDecimal.ZERO);
+                            defaultProjection.setEstimatedVariables(java.math.BigDecimal.ZERO);
+                            defaultProjection.setTargetSavings(java.math.BigDecimal.ZERO);
+                            defaultProjection.setProjectionDate(now);
+                            return Mono.just(defaultProjection);
+                        }))
+                );
     }
 }
