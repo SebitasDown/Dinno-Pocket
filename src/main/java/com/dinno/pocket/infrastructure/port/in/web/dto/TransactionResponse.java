@@ -33,4 +33,7 @@ public class TransactionResponse {
 
     @Schema(description = "Fecha de creación", example = "2026-04-07T21:12:44")
     private LocalDateTime createdAt;
+    
+    @Schema(description = "Indica si es un gasto/ingreso fijo", example = "true")
+    private Boolean isFixed;
 }

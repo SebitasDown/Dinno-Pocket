@@ -1,8 +1,10 @@
 package com.dinno.pocket.infrastructure.port.out.persistence.repository;
 
+import lombok.Data;
 import java.math.BigDecimal;
 
-public interface CategorySum {
-    String getCategory();
-    BigDecimal getTotal();
+@Data
+public class CategorySum {
+    private String category;
+    private BigDecimal total;
 }

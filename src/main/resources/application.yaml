@@ -9,16 +9,16 @@ spring:
     name: Dinno-Pocket
   r2dbc:
     url: ${SPRING_R2DBC_URL:r2dbc:postgresql://localhost:5432/dinno_pocket}
-    username: ${SPRING_R2DBC_USERNAME:avnadmin}
-    password: ${SPRING_R2DBC_PASSWORD:}
+    username: ${SPRING_R2DBC_USERNAME:postgres}
+    password: ${SPRING_R2DBC_PASSWORD:postgres}
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/dinno_pocket}
-    username: ${SPRING_DATASOURCE_USERNAME:avnadmin}
-    password: ${SPRING_DATASOURCE_PASSWORD:}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
   flyway:
     url: ${SPRING_FLYWAY_URL:jdbc:postgresql://localhost:5432/dinno_pocket}
-    user: ${SPRING_FLYWAY_USER:avnadmin}
-    password: ${SPRING_FLYWAY_PASSWORD:}
+    user: ${SPRING_FLYWAY_USER:postgres}
+    password: ${SPRING_FLYWAY_PASSWORD:postgres}
 
 eureka:
   client:

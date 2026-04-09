@@ -30,4 +30,6 @@ public class ProjectionResponse {
     private LocalDate projectionDate;
     @Schema(description = "Presupuesto restante para gastos variables", example = "300.00")
     private BigDecimal maneuverMargin;
+    @Schema(description = "Variación respecto al margen de ahorro del mes anterior", example = "-160.00")
+    private BigDecimal savingsVariation;
 }

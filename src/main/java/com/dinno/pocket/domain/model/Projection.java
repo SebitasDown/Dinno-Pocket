@@ -12,10 +12,11 @@ public class Projection {
     private BigDecimal estimatedVariables;
     private LocalDate projectionDate;
     private BigDecimal targetSavings;
+    private BigDecimal savingsVariation;
 
     public Projection() {}
 
-    public Projection(UUID id, UUID walletId, BigDecimal balanceAtMoment, BigDecimal remainingFixedExpenses, BigDecimal estimatedVariables, LocalDate projectionDate, BigDecimal targetSavings) {
+    public Projection(UUID id, UUID walletId, BigDecimal balanceAtMoment, BigDecimal remainingFixedExpenses, BigDecimal estimatedVariables, LocalDate projectionDate, BigDecimal targetSavings, BigDecimal savingsVariation) {
         this.id = id;
         this.walletId = walletId;
         this.balanceAtMoment = balanceAtMoment;
@@ -23,6 +24,7 @@ public class Projection {
         this.estimatedVariables = estimatedVariables;
         this.projectionDate = projectionDate;
         this.targetSavings = targetSavings;
+        this.savingsVariation = savingsVariation;
     }
 
     public BigDecimal calculateManeuverMargin() {
@@ -46,6 +48,8 @@ public class Projection {
     public void setProjectionDate(LocalDate projectionDate) { this.projectionDate = projectionDate; }
     public BigDecimal getTargetSavings() { return targetSavings; }
     public void setTargetSavings(BigDecimal targetSavings) { this.targetSavings = targetSavings; }
+    public BigDecimal getSavingsVariation() { return savingsVariation; }
+    public void setSavingsVariation(BigDecimal savingsVariation) { this.savingsVariation = savingsVariation; }
 
     public static ProjectionBuilder builder() {
         return new ProjectionBuilder();
@@ -59,6 +63,7 @@ public class Projection {
         private BigDecimal estimatedVariables;
         private LocalDate projectionDate;
         private BigDecimal targetSavings;
+        private BigDecimal savingsVariation;
 
         public ProjectionBuilder id(UUID id) { this.id = id; return this; }
         public ProjectionBuilder walletId(UUID walletId) { this.walletId = walletId; return this; }
@@ -67,8 +72,9 @@ public class Projection {
         public ProjectionBuilder estimatedVariables(BigDecimal variables) { this.estimatedVariables = variables; return this; }
         public ProjectionBuilder projectionDate(LocalDate date) { this.projectionDate = date; return this; }
         public ProjectionBuilder targetSavings(BigDecimal target) { this.targetSavings = target; return this; }
+        public ProjectionBuilder savingsVariation(BigDecimal variation) { this.savingsVariation = variation; return this; }
         public Projection build() {
-            return new Projection(id, walletId, balanceAtMoment, remainingFixedExpenses, estimatedVariables, projectionDate, targetSavings);
+            return new Projection(id, walletId, balanceAtMoment, remainingFixedExpenses, estimatedVariables, projectionDate, targetSavings, savingsVariation);
         }
     }
 }

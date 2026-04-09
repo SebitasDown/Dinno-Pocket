@@ -57,4 +57,16 @@ public class TransactionPersistenceAdapter implements TransactionRepositoryPort 
                         BigDecimal::add
                 ));
     }
+    
+    @Override
+    public Mono<BigDecimal> sumFixedExpenses(UUID walletId, int month, int year) {
+        return repository.sumFixedExpenses(walletId, month, year)
+                .defaultIfEmpty(BigDecimal.ZERO);
+    }
+    
+    @Override
+    public Mono<BigDecimal> sumVariableExpenses(UUID walletId, int month, int year) {
+        return repository.sumVariableExpenses(walletId, month, year)
+                .defaultIfEmpty(BigDecimal.ZERO);
+    }
 }

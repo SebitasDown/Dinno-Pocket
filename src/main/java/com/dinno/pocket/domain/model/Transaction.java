@@ -13,10 +13,11 @@ public class Transaction {
     private String category;
     private TransactionType type;
     private LocalDateTime createAt;
+    private Boolean isFixed;
 
     public Transaction() {}
 
-    public Transaction(UUID id, UUID walletId, String title, String description, BigDecimal amount, String category, TransactionType type, LocalDateTime createAt) {
+    public Transaction(UUID id, UUID walletId, String title, String description, BigDecimal amount, String category, TransactionType type, LocalDateTime createAt, Boolean isFixed) {
         this.id = id;
         this.walletId = walletId;
         this.title = title;
@@ -25,6 +26,7 @@ public class Transaction {
         this.category = category;
         this.type = type;
         this.createAt = createAt;
+        this.isFixed = isFixed;
     }
 
     public boolean isValidCategory() {
@@ -53,6 +55,8 @@ public class Transaction {
     public void setType(TransactionType type) { this.type = type; }
     public LocalDateTime getCreateAt() { return createAt; }
     public void setCreateAt(LocalDateTime createAt) { this.createAt = createAt; }
+    public Boolean getIsFixed() { return isFixed; }
+    public void setIsFixed(Boolean isFixed) { this.isFixed = isFixed; }
 
     public static TransactionBuilder builder() {
         return new TransactionBuilder();
@@ -67,6 +71,7 @@ public class Transaction {
         private String category;
         private TransactionType type;
         private LocalDateTime createAt;
+        private Boolean isFixed;
 
         public TransactionBuilder id(UUID id) { this.id = id; return this; }
         public TransactionBuilder walletId(UUID walletId) { this.walletId = walletId; return this; }
@@ -76,8 +81,9 @@ public class Transaction {
         public TransactionBuilder category(String category) { this.category = category; return this; }
         public TransactionBuilder type(TransactionType type) { this.type = type; return this; }
         public TransactionBuilder createAt(LocalDateTime createAt) { this.createAt = createAt; return this; }
+        public TransactionBuilder isFixed(Boolean isFixed) { this.isFixed = isFixed; return this; }
         public Transaction build() {
-            return new Transaction(id, walletId, title, description, amount, category, type, createAt);
+            return new Transaction(id, walletId, title, description, amount, category, type, createAt, isFixed);
         }
     }
 }

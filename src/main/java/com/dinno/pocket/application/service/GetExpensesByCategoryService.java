@@ -11,6 +11,7 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -42,6 +43,16 @@ public class GetExpensesByCategoryService implements GetExpensesByCategoryUseCas
                         wallet.getId(),
                         currentMonth,
                         currentYear
-                ));
+                ))
+                .map(dbResult -> {
+                    Map<ExpenseCategory, BigDecimal> result = new EnumMap<>(ExpenseCategory.class);
+                    // Initialize all enum values with 0
+                    for (ExpenseCategory cat : ExpenseCategory.values()) {
+                        result.put(cat, BigDecimal.ZERO);
+                    }
+                    // Override with actual results from DB
+                    result.putAll(dbResult);
+                    return result;
+                });
     }
 }

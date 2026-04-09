@@ -25,4 +25,7 @@ public class TransactionRequest {
 
     @Schema(description = "Tipo de movimiento", allowableValues = {"INCOME", "EXPENSE"}, example = "EXPENSE")
     private String type; 
+    
+    @Schema(description = "Indica si es un gasto/ingreso fijo", example = "true")
+    private Boolean isFixed;
 }

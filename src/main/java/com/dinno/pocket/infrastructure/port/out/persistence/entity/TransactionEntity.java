@@ -31,6 +31,9 @@ public class TransactionEntity {
 
     @Column("create_at")
     private LocalDateTime createdAt;
+    
+    @Column("is_fixed")
+    private Boolean isFixed;
 
     @Version
     private Long version;
