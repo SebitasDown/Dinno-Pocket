@@ -11,6 +11,8 @@ spring:
     url: ${SPRING_R2DBC_URL:r2dbc:postgresql://localhost:5432/dinno_pocket}
     username: ${SPRING_R2DBC_USERNAME:postgres}
     password: ${SPRING_R2DBC_PASSWORD:postgres}
+    properties:
+      preparedStatementCacheQueries: 0
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/dinno_pocket}
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
