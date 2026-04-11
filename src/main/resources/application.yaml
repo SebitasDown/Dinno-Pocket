@@ -22,6 +22,15 @@ spring:
     user: ${SPRING_FLYWAY_USER:postgres}
     password: ${SPRING_FLYWAY_PASSWORD:postgres}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
 eureka:
   client:
     service-url:
